@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="weather-container">
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Search city..." />
+            <button onclick="fetchWeather()">
+                <span class="material-icons">search</span>
+            </button>
+        </div>
+
+
+
+        <div class="weather-info  weather-js ">
+            <img src="https://openweathermap.org/img/wn/03d@2x.png" alt="weather icon" id="weatherIcon" />
+            <h1 id="temperature">15ºC</h1>
+            <h2 id="cityName">Seoul</h2>
+        </div>
+
+        <div class="weather-details  weather-js">
+            <div>
+                <p id="humidity">85%</p>
+                <p>Humidity</p>
+            </div>
+            <div>
+                <p id="wind">3.58 km/h</p>
+                <p>Wind Speed</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+
+
+
+            const city = document.getElementById('cityInput').value;
+            const apiKey = '196c97385a8f3b60942dd868c4a80d5a';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+
+            document.getElementById('cityInput').value = "";
+
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                alert("City not found an error occurred.");
+                document.getElementById('cityInput').value = "";
+                input.value = ""
+            }
+
+            else if (response.ok) {
+                document.querySelectorAll(".weather-js").forEach(el => {
+                    el.classList.remove("weather-js");
+                });
+
+
+            }
+
+
+            const data = await response.json();
+
+            console.log(data);
+
+
+
+
+
+
+
+            document.getElementById('temperature').innerText = `${Math.round(data.main.temp)}ºC`;
+            document.getElementById('cityName').innerText = data.name;
+            document.getElementById('humidity').innerText = `${data.main.humidity}%`;
+            document.getElementById('wind').innerText = `${data.wind.speed} km/h`;
+            document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+        }
+
+
+
+    </script>
+</body>
+
+</html>
