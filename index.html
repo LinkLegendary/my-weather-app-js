@@ -41,48 +41,60 @@
     <script>
         async function fetchWeather() {
 
-
+            const apiKey = '196c97385a8f3b60942dd868c4a80d5a';
 
             const city = document.getElementById('cityInput').value;
-            const apiKey = '196c97385a8f3b60942dd868c4a80d5a';
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-
-            document.getElementById('cityInput').value = "";
-
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                alert("City not found an error occurred.");
-                document.getElementById('cityInput').value = "";
-                input.value = ""
+            if (city === "") {
+                alert('Enter city name');
+                return;
             }
 
-            else if (response.ok) {
+
+            try {
+
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 401) {
+                        console.error("Invalid API Key:", errorData.messsage);
+                        alert("Invalid API Key. please check your key.");
+                    } else {
+                        console.error("Error fetching weather:", errorData.messsage);
+                        alert("City not found or error occurred.");
+                    }
+                    document.getElementById('cityInput').value = "";
+                    return;
+                }
+
+                const data = await response.json();
+                document.getElementById('cityInput').value = "";
+
                 document.querySelectorAll(".weather-js").forEach(el => {
                     el.classList.remove("weather-js");
                 });
 
 
-            }
+                document.getElementById('temperature').innerText = `${Math.round(data.main.temp)}ºC`;
+                document.getElementById('cityName').innerText = data.name;
+                document.getElementById('humidity').innerText = `${data.main.humidity}%`;
+                document.getElementById('wind').innerText = `${data.wind.speed} km/h`;
+                document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+ } catch (error) {
+          console.error("Fetch failed", error)
+          alert("An unexpected error occurred. Check your internet connection.");
+
+       }
 
 
-            const data = await response.json();
-
-            console.log(data);
 
 
 
 
 
 
-
-            document.getElementById('temperature').innerText = `${Math.round(data.main.temp)}ºC`;
-            document.getElementById('cityName').innerText = data.name;
-            document.getElementById('humidity').innerText = `${data.main.humidity}%`;
-            document.getElementById('wind').innerText = `${data.wind.speed} km/h`;
-            document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
         }
 
 

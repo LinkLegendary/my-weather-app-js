@@ -89,11 +89,4 @@ body {
     display: none;
   }
 
-  .weather-details {
-    background: rgba(255, 0, 0, 0.1);
-  }
-
-  .weather-details > div {
-    background: rgba(0, 0, 255, 0.1);
-    padding: 10px;
-  }
+ 
